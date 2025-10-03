@@ -1,0 +1,25 @@
+{
+  "name": "stokapp",
+  "version": "1.0.0",
+  "description": "application de gestionnaire de stock et logistique",
+  "license": "ISC",
+  "author": "harimanana edwinot",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mariadb": "^3.4.5",
+    "mysql2": "^3.14.4",
+    "nodemailer": "^7.0.6",
+    "nodemon": "^3.1.10",
+    "sequelize": "^6.37.7"
+  }
+}
