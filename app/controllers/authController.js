@@ -47,7 +47,7 @@ exports.authentication = async (req, res) => {
 
         // CORRECTION: Utiliser l'ID correct du modèle
         const tokenPayload = {
-            id: userWithoutPassword.user_id || userWithoutPassword.id, // Support des deux formats
+            id: userWithoutPasswordid || userWithoutPassword.id, // Support des deux formats
             role: userWithoutPassword.role,
             email: userWithoutPassword.email,
             enterpriseName: userWithoutPassword.enterpriseName
@@ -61,7 +61,7 @@ exports.authentication = async (req, res) => {
         try {
             await User.update(
                 { refreshToken: refreshToken, token: token },
-                { where: { user_id: user.user_id } }
+                { where: { user_id: userid } }
             );
         } catch (updateError) {
             console.log('Erreur lors de la sauvegarde des tokens:', updateError.message);
@@ -118,7 +118,7 @@ exports.refreshToken = async (req, res) => {
 
         // Générer un nouveau access token
         const newTokenPayload = {
-            id: user.user_id || user.id,
+            id: userid || user.id,
             role: user.role,
             email: user.email,
             enterpriseName: user.enterpriseName
@@ -131,7 +131,7 @@ exports.refreshToken = async (req, res) => {
         try {
             await User.update(
                 { refreshToken: newRefreshToken },
-                { where: { [User.primaryKeyAttribute]: user.user_id || user.id } }
+                { where: { [User.primaryKeyAttribute]: userid || user.id } }
             );
         } catch (updateError) {
             console.log('Erreur lors de la mise à jour du refresh token:', updateError.message);

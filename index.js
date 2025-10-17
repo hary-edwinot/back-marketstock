@@ -1,4 +1,5 @@
-const exepress = require('express')
+const exepress = require('express');
+const pagination = require('./midellware/pagination');
 require('./app/config/db_connection');
 // require('./app/config/configdb')
 
@@ -7,6 +8,7 @@ const server = exepress()
 
 //middleware
 server.use(exepress.json())
+server.use(pagination)
 
 
 //Routes
