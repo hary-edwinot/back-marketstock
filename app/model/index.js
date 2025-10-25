@@ -11,6 +11,7 @@ db.User = require('./userModel')(db_connection, DataTypes)
 db.Product = require('./productModel')(db_connection, DataTypes)
 db.Category = require('./categoryModel')(db_connection, DataTypes)
 db.Status = require('./stautsModel')(db_connection, DataTypes)
+db.History = require('./historyModel')(db_connection, DataTypes)
 
 Object.keys(db).forEach(model => {
   if (db[model].associate) db[model].associate(db)

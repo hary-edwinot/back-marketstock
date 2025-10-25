@@ -21,7 +21,7 @@
 // module.exports = withPagination;
 
 module.exports = (req, res, next) => {
-    const limit =  parseInt(process.env.DEFAULT_LIMIT);
+    const limit = parseInt(req.query.limit) || parseInt(process.env.DEFAULT_LIMIT);
 
     const page = parseInt(req.query.page) || parseInt(process.env.DEFAULT_PAGE);
     const offset = (page -1) * limit;

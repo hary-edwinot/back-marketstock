@@ -1,19 +1,31 @@
 const { Op } = require('sequelize')
-const { Product, User, Status, Category } = require('../model')
+const { Product, User, Status, Category, History } = require('../model')
 const paginatedResponse = require('../utils/paginatedResponse')
+const { db_connection } = require('../config/db_connection')
 
 exports.createProduct = async (req, res) => {
-  await Product.create(req.body)
-    .then(product => {
-      const message = 'Produit ajoute avec succes'
-      res.status(200).json({ status: 'success', message, data: product })
+  const t = await db_connection.transaction()
+  try {
+    const product = await Product.create(req.body, { transaction: t })
+    console.log(product)
+    await History.create(
+      {
+        productId: product.id,
+        isProduct: true
+      },
+      { transaction: t }
+    )
+    await t.commit()
+
+    const message = 'Produit ajoute avec succes'
+    res.status(201).json({ status: 'success', message, data: product })
+  } catch (error) {
+    await t.rollback()
+    res.status(500).json({
+      status: 'error',
+      error: error.message
     })
-    .catch(error => {
-      res.status(500).json({
-        status: 'error',
-        error: error.message
-      })
-    })
+  }
 }
 
 exports.findAllProducts = async (req, res) => {
