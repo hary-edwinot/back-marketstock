@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const pagination = require('./midellware/pagination');
 require('./app/config/db_connection');
 const cors = require('cors');
 const { options } = require('./app/routes');
@@ -27,14 +28,14 @@ server.use(cors(optionsCors))
 
 //middleware
 server.use(express.json())
-
+server.use(pagination)
 
 
 //Routes
 //Utilisation du routeur pour toutes les routes commençant par /api/v1
 //Cela permet de centraliser la gestion des routes dans un seul fichier
 //et de garder le code organisé et modulaire.
-server.use('/api/v1', require('./app/routes'));
+server.use('/api/v1', options);
 
 
 
