@@ -37,15 +37,29 @@ exports.findAllProducts = async (req, res) => {
       {
         model: User,
         as: 'user',
+        where: {
+          [Op.or]: [
+            { firstName: { [Op.like]: `%${search}%` } },
+            { lastName: { [Op.like]: `%${search}%` } },
+            { email: { [Op.like]: `%${search}%` } },
+            { enterpriseName: { [Op.like]: `%${search}%` } }
+          ]
+        },
         attributes: ['user_id', 'firstName', 'lastName', 'email', 'isActive']
       },
       {
         model: Category,
-        as: 'category'
+        as: 'category',
+        where: {
+          name: { [Op.like]: `%${search}%` }
+        }
       },
       {
         model: Status,
-        as: 'status'
+        as: 'status',
+        where: {
+          name: { [Op.like]: `%${search}%` }
+        }
       }
     ],
     where: {
