@@ -1,20 +1,21 @@
 const { Op } = require('sequelize')
-const { Product, User, Status, Category, History } = require('../model')
+const { Product, User, Status, Category } = require('../model')
 const paginatedResponse = require('../utils/paginatedResponse')
 const { db_connection } = require('../config/db_connection')
+const db = require('../model/index');
 
 exports.createProduct = async (req, res) => {
   const t = await db_connection.transaction()
   try {
     const product = await Product.create(req.body, { transaction: t })
     console.log(product)
-    await History.create(
-      {
-        productId: product.id,
-        isProduct: true
-      },
-      { transaction: t }
-    )
+    // await History.create(
+    //   {
+    //     productId: product.id,
+    //     isProduct: true
+    //   },
+    //   { transaction: t }
+    // )
     await t.commit()
 
     const message = 'Produit ajoute avec succes'
@@ -179,4 +180,31 @@ exports.deleteProduct = async (req, res) => {
         message: error.message
       })
     })
+}
+
+
+// Recuperer les produits d'un utilisateur
+exports.getProductsByUserId = async (req, res) => {
+  try {
+    const { user_id } = req.params;
+
+    // ✅ VALIDATION: Vérifier que user_id est fourni
+    if (!user_id || user_id === 'undefined' || user_id.trim() === '') {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Le paramètre user_id est requis'
+      });
+    }
+
+    const products = await db.Product.findAll({
+      where: { user_id: user_id }
+    });
+
+    res.status(200).json({ data: products });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    })
+  }
 }

@@ -35,7 +35,7 @@ server.use(pagination)
 //Utilisation du routeur pour toutes les routes commençant par /api/v1
 //Cela permet de centraliser la gestion des routes dans un seul fichier
 //et de garder le code organisé et modulaire.
-server.use('/api/v1', options);
+server.use('/api/v1', require('./app/routes'));
 
 
 

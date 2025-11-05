@@ -78,7 +78,7 @@ module.exports = (db_connection, DataTypes) => {
   User.associate = models => {
     User.hasMany(models.Product, {
       foreignKey: {
-        name: 'userId',
+        name: 'user_id',
         allowNull: false
       },
       as: 'products'

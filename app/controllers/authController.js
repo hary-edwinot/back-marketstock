@@ -47,7 +47,7 @@ exports.authentication = async (req, res) => {
 
         // CORRECTION: Utiliser l'ID correct du modèle
         const tokenPayload = {
-            id: userWithoutPasswordid || userWithoutPassword.id, // Support des deux formats
+            id: userWithoutPassword.user_id, // Support des deux formats
             role: userWithoutPassword.role,
             email: userWithoutPassword.email,
             enterpriseName: userWithoutPassword.enterpriseName
@@ -61,7 +61,7 @@ exports.authentication = async (req, res) => {
         try {
             await User.update(
                 { refreshToken: refreshToken, token: token },
-                { where: { user_id: userid } }
+                { where: { user_id: userWithoutPassword.user_id } }
             );
         } catch (updateError) {
             console.log('Erreur lors de la sauvegarde des tokens:', updateError.message);
@@ -101,7 +101,7 @@ exports.refreshToken = async (req, res) => {
         // Vérifier le refresh token
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-        // ✅ CORRECTION: Utiliser await correctement
+        // CORRECTION: Utiliser await correctement
         const user = await User.findOne({
             where: {
                 [User.primaryKeyAttribute]: decoded.id,

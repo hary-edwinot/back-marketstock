@@ -1,18 +1,39 @@
 const { Category, Status } = require('../model')
 
+const { db_connection } = require('../config/db_connection')
+
+
 exports.createCategory = async (req, res) => {
-  await Category.create(req.body)
-    .then(product => {
-      const message = 'categorie ajoute avec succes'
-      res.status(200).json({ status: 'success', message, data: product })
-    })
-    .catch(error => {
+  const t = await db_connection.transaction()
+    // await Category.create(req.body, { transaction: t })
+    //   .then(product => {
+    //     const message = 'categorie ajoute avec succes'
+    //     res.status(200).json({ status: 'success', message, data: product })
+    //   })
+    //   .catch(error => {
+    //     res.status(500).json({
+    //       status: 'error',
+    //       error: error.message
+    //     })
+    //   })
+
+    try {
+      const categorie = await Category.create(req.body, { transaction: t })
+      console.log(categorie)
+      await t.commit()
+      const message = 'Categorie ajoute avec succes'
+      res.status(201).json({ status: 'success', message, data: categorie })
+    } catch (error) {
+      await t.rollback()
       res.status(500).json({
         status: 'error',
         error: error.message
       })
-    })
+    }
 }
+
+
+
 
 exports.findAllCategory = async (req, res) => {
   await Category.findAll()
@@ -26,6 +47,8 @@ exports.findAllCategory = async (req, res) => {
       })
     })
 }
+
+
 
 exports.deleteCategory = async (req, res) => {
   const { id } = req.params
